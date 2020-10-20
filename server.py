@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 app.secret_key = 'secret'
 # 以下でMongoDBの場所を指定。testdb(データベース)やuser(コレクション、SQLでいうテーブル)はあらかじめ作る必要なし。
-app.config["MONGO_URI"] = os.environ.get('MONGOHQ_URL')
+app.config["MONGO_URI"] = os.environ.get('MONGODB_URI')
 mongo = PyMongo(app)
 
 
