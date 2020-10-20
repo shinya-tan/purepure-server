@@ -1,6 +1,7 @@
-from flask import Flask, current_app, request, flash, redirect, url_for, render_template
+from flask import Flask, current_app, request, flash, redirect, url_for, render_template, jsonify
 from flask_pymongo import PyMongo
 from dateutil.parser import parse
+import json
 import os
 
 
@@ -8,6 +9,7 @@ app = Flask(__name__)
 app.secret_key = 'secret'
 # 以下でMongoDBの場所を指定。testdb(データベース)やuser(コレクション、SQLでいうテーブル)はあらかじめ作る必要なし。
 app.config["MONGO_URI"] = os.environ.get('MONGODB_URI')
+app.config["JSON_AS_ASCII"] = False
 mongo = PyMongo(app)
 
 
@@ -17,7 +19,7 @@ def show_entry():
 	entries = []
 	for row in users:
 		entries.append({"name": row['name'], "birthday": row['birthday'].strftime("%Y/%m/%d")})
-	return entries
+	return jsonify({"data": entries })
 
 
 @app.route('/add', methods=['POST'])
@@ -35,7 +37,7 @@ def filter_entry():
 	results = []
 	for row in cur:
 		results.append({"name": row['name'], "birthday": row['birthday'].strftime("%Y/%m/%d")})
-	return results
+	return jsonify({"data": results })
 
 
 if __name__ == '__main__':
