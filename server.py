@@ -1,12 +1,13 @@
 from flask import Flask, current_app, request, flash,redirect,url_for,render_template
 from flask_pymongo import PyMongo
 from dateutil.parser import parse
+import os
+
 
 app = Flask(__name__)
 app.secret_key = 'secret'
 # 以下でMongoDBの場所を指定。testdb(データベース)やuser(コレクション、SQLでいうテーブル)はあらかじめ作る必要なし。
-app.config['MONGO_HOST'] = '192.168.99.100'
-app.config["MONGO_URI"] = "mongodb://localhost:27017/testdb"
+app.config["MONGO_URI"] = os.environ.get('MONGOHQ_URL')
 mongo = PyMongo(app)
 
 
@@ -40,4 +41,5 @@ def filter_entry():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    port = int(os.environ.get('PORT', 5000))
+    app.run(port=port)
